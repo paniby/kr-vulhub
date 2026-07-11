@@ -1,5 +1,4 @@
-# 
-whs4기 가상화(컨테이너 보안 실무) 과제
+# CVE-2025-3248 Langflow API
 
 ### 1. 취약점 요약 
 Langflow의 /api/v1/validate/code 엔드포인트에서 인증 미흡으로 임의 코드 실행이 가능한 취약점이다.
@@ -11,8 +10,9 @@ docker compose up -d
 ```
 
 ### 3. 취약 조건 
-
-
+취약한 조건은 다음과 같다.
+- Langflow 버전이 1.3.0 미만
+- 인증되지 않은 사용자가 /api/v1/validate/code 엔드포인트에 접근 가능해야 함
 
 ### 4. 재현 절차 
 `http://your-id:7860/api/v1/validate/code`에 POST 방식으로 다음과 같은 악의적인 요청을 보낸다.
