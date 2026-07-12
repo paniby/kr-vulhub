@@ -1,7 +1,7 @@
 # CVE-2025-3248 Langflow API 원격 코드 실행 취약점
 
 ### 1. 취약점 요약 
-Langflow는 AI 애플리케이션 구축 프레임워크로, 쉽게 워크플로우를 작성할 수 있는 오픈소스이다.
+Langflow는 AI 애플리케이션 구축 프레임워크 오픈소스이다.
 Langflow 1.3.0 미만 버전에서 /api/v1/validate/code 엔드포인트의 사용자 인증 미흡으로 발생하는 원격 코드가 실행되는 취약점이다.
 CVSS 9.8로 매우 위험도가 높다.
 
@@ -72,7 +72,9 @@ except requests.exceptions.JSONDecodeError:
 ![](./5.png)
 
 ### 7. 대응방안
-현재 Langflow 1.3.0 이상의 버전으로 업데이트를 한다.
+Langflow 1.3.0 이상 버전으로 업데이트 한다.
 
 ### 8. 참고자료
 - https://github.com/fDarkShadow/noctis/issues/186
+- https://github.com/langflow-ai/langflow/blob/1.3.0
+- https://github.com/langflow-ai/langflow/blob/1.2.0
